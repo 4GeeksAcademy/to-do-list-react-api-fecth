@@ -1,26 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
 
-//create your first component
+
 const Home = () => {
+	let [newTask, setNewTask] = useState('');
+	let [tasks, setTasks] = useState([]);
+
+	let handleChange = (event) => {
+		setNewTask(event.target.value);
+	};
+
+	let handleSubmit = (event) => {
+		event.preventDefault();
+
+		if (newTask) {
+			addTask(newTask);
+			setNewTask(''); 
+		}
+	};
+
+	let addTask = (newTask) => {
+		setTasks([tasks, newTask]);
+	};
+
+	let deleteTask = (index) => {
+		let newTasks = [tasks];
+		newTasks.splice(index, 1);
+		setTasks(newTasks);
+	};
+
+	let showDeleteIcon = (index) => {
+		// 
+	};
+
 	return (
-		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div>
+			<h1 text-secondary>To-Do List</h1>
+			<form class="form-floating" onSubmit={handleSubmit}>
+				<input class="form-control" type="text" id="floatingInputValue" placeholder="Add task" value={newTask} onChange={handleChange}/>
+				<label for="floatingInputValue">No tasks, add tasck...</label>
+			</form>
+			{tasks.length > 0 ? (
+				<ul>
+					{tasks.map((task, index) => (
+						<li key={index} onMouseEnter={() => showDeleteIcon(index)}>
+							{task}
+							{showDeleteIcon(index) && (
+								<span onClick={() => deleteTask(index)}>️</span>
+							)}
+						</li>
+					))}
+				</ul>
+			) : ("")}
 		</div>
 	);
-};
+}
+
 
 export default Home;
