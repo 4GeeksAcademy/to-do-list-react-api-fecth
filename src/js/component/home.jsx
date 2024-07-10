@@ -51,7 +51,7 @@ const Home = () => {
 			}
 		})
 			.then((resp) => {
-				if (resp.status== 404){
+				if (resp.status == 404) {
 					crearUsuario()
 				}
 				return resp.json()
@@ -68,20 +68,20 @@ const Home = () => {
 			body: JSON.stringify({
 				"label": newTask,
 				"is_done": false
-			  }),
+			}),
 			headers: {
 				"Content-Type": "application/json"
 			}
 		})
 			.then((resp) => resp.json())
-			
+
 			.then((data) => console.log(data))
-			
+
 			.catch((error) => console.log(error))
 
 	}
 
-	 function deleteTarea(id) {
+	function deleteTarea(id) {
 		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
 			method: "DELETE",
 			headers: {
