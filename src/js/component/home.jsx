@@ -13,7 +13,7 @@ const Home = () => {
 		event.preventDefault();
 
 		if (newTask) {
-			setTasks([...tasks, newTask]);
+			postTarea()
 			setNewTask('');
 		}
 	};
@@ -40,37 +40,64 @@ const Home = () => {
 			.then((resp) => resp.json())
 			.then((data) => console.log(data))
 			.catch((error) => console.log(error))
-			
-			
-			}
-
-			function listarTarea() {
-				fetch('https://playground.4geeks.com/todo/users/pablocirus89', {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json"
-					}
-				})
-					.then((resp) => resp.json())
-					.then((data) => setTasks(data.todos))
-					.catch((error) => console.log(error))
-					
-					
-					}
-		
-
-	const agregarTarea = () => {
-		if (tasks.filter() !== "") {
-			const nuevaLista = {
-				id: tasks.length + 1,
-				texto: tasks
-			};
-		}
 
 	}
 
+	function listarTarea() {
+		fetch('https://playground.4geeks.com/todo/users/pablocirus89', {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then((resp) => {
+				if (resp.status== 404){
+					crearUsuario()
+				}
+				return resp.json()
+			})
+
+			.then((data) => setTasks(data.todos))
+			.catch((error) => console.log(error))
+
+	}
+
+	function postTarea() {
+		fetch('https://playground.4geeks.com/todo/todos/pablocirus89', {
+			method: "POST",
+			body: JSON.stringify({
+				"label": newTask,
+				"is_done": false
+			  }),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then((resp) => resp.json())
+			
+			.then((data) => console.log(data))
+			
+			.catch((error) => console.log(error))
+
+	}
+
+	 function deleteTarea(id) {
+		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then((resp) => resp.json())
+			.then((data) => console.log(data))
+			.catch((error) => console.log(error))
+
+	}
+
+
+
 	useEffect(() => {
-		crearUsuario()
+		//crearUsuario()
 		listarTarea()
 	}, [])
 
@@ -90,7 +117,7 @@ const Home = () => {
 							<li className="list-group-item item-li fw-semibold text-center" key={index}>
 								{task.label}
 
-								<button type="button" className="btn-close float-end" aria-label="Close" onClick={() => deleteTask(index)}>️</button>
+								<button type="button" className="btn-close float-end" aria-label="Close" onClick={() => deleteTarea(task.id)}>️</button>
 							</li>
 						))}
 					</ul>
