@@ -5,10 +5,10 @@ const Home = () => {
 	let [newTask, setNewTask] = useState('');
 	let [tasks, setTasks] = useState([]);
 
-	let handleChange = (event) => {
+	 let handleChange = (event) => {
 		setNewTask(event.target.value);
 	};
-
+ 
 	let handleSubmit = (event) => {
 		event.preventDefault();
 
@@ -16,17 +16,6 @@ const Home = () => {
 			postTarea()
 			setNewTask('');
 		}
-	};
-
-	let deleteTask = (index) => {
-		let newTasks = [];
-		newTasks = tasks.filter((item, id) => {
-			if (index != id) {
-				return item
-			}
-		}
-		)
-		setTasks(newTasks)
 	};
 
 
@@ -51,6 +40,7 @@ const Home = () => {
 			}
 		})
 			.then((resp) => {
+				console.log(resp.status)
 				if (resp.status == 404) {
 					crearUsuario()
 				}
@@ -73,7 +63,11 @@ const Home = () => {
 				"Content-Type": "application/json"
 			}
 		})
-			.then((resp) => resp.json())
+			.then((resp) => {
+				console.log(resp)
+				if (resp.status === 201) { listarTarea() }
+				return resp.json()
+			})
 
 			.then((data) => console.log(data))
 
@@ -88,10 +82,15 @@ const Home = () => {
 				"Content-Type": "application/json"
 			}
 		})
-			.then((resp) => resp.json())
+			.then((resp) => {
+
+				console.log(resp)
+				if (resp.status === 204) { listarTarea() }
+				return resp.json()
+			})
+
 			.then((data) => console.log(data))
 			.catch((error) => console.log(error))
-
 	}
 
 
